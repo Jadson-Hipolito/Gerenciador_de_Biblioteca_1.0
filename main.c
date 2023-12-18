@@ -18,7 +18,7 @@ int main() {
           "███████\n\n");
    printf("               ██████████████████████████████████████████████\n");
    printf("              ████████████████████████████████████████████████\n");
-   printf("             █████ 1-Livros Resistrados                   █████\n");
+   printf("             █████ 1-Livros                               █████\n");
    printf("            █████  2-Cliente                               █████\n");
    printf("            █████  3-Funcionarios                          █████\n");
    printf("             █████ 0-Finalizar Programa                   █████\n");

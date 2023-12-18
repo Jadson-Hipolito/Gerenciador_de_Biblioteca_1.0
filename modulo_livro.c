@@ -274,6 +274,9 @@ int menu_livro() {
     printf("1 - Registrar Livros Novos\n");
     printf("2 - Editar Registro de Livro\n");
     printf("3 - Alugar Livro\n");
+    printf("4 - Devolver Livro\n");
+    printf("5 - Listar livros\n");
+    printf("6 - Listar livros por autor\n");
     printf("0 - Retornar para o menu principal\n");
     printf("=====================================\n");
     printf("Escolha uma opção: ");
@@ -289,6 +292,15 @@ int menu_livro() {
     case 3:
       emprestimo_livro();
       break;
+    case 4:
+      devolucao_livro();
+      break;
+    case 5:
+      listar_livros();
+      break;
+    case 6:
+      listar_livros_por_autor();
+      break;
     case 0:
       printf("Retornando para o menu principal.\n");
       break;
@@ -297,6 +309,48 @@ int menu_livro() {
     }
   }
   return 0;
+}
+
+void listar_livros() {
+    printf("\n === Lista de Livros ===\n");
+
+    for (int i = 0; i < numLivros; i++) {
+        printf("Título: %s, Autor: %s, Quantidade: %d, Local: %d, ISBN: %s\n",
+               biblioteca[i].titulo, biblioteca[i].autor,
+               biblioteca[i].quant, biblioteca[i].local, biblioteca[i].isbn);
+    }
+    printf("Pressione Enter para sair...\n");
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+    printf("Pressione Enter para sair...\n");
+    getchar();
+}
+
+void listar_livros_por_autor() {
+    char autor[150];
+    printf("\nDigite o nome do autor: ");
+    scanf(" %[^\n]", autor);
+
+    printf("\n === Lista de Livros do Autor %s ===\n", autor);
+
+    int encontrados = 0;
+
+    for (int i = 0; i < numLivros; i++) {
+        if (strcmp(biblioteca[i].autor, autor) == 0) {
+            printf("Título: %s, Quantidade: %d, Local: %d, ISBN: %s\n",
+                   biblioteca[i].titulo, biblioteca[i].quant,
+                   biblioteca[i].local, biblioteca[i].isbn);
+            encontrados++;
+        }
+    }
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+    printf("Pressione Enter para sair...\n");
+    getchar();
+
+    if (encontrados == 0) {
+        printf("Nenhum livro encontrado para o autor %s.\n", autor);
+    }
 }
 
 void registrar_livro() {
@@ -330,7 +384,7 @@ void registrar_livro() {
         fprintf(file, "Número do local: %d\n", biblioteca[numLivros].local);
 
         printf("ISBN: ");
-        scanf("%19[^\n]", biblioteca[numLivros].isbn);
+        scanf(" %19[^\n]%*c", biblioteca[numLivros].isbn);
         fprintf(file, "ISBN: %.19s\n", biblioteca[numLivros].isbn);
 
         numLivros++;

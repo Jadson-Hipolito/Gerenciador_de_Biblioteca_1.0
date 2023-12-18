@@ -29,5 +29,7 @@ void registrar_livro();
 int menu_livro();
 bool validar_isbn(const char *isbn);
 void devolucao_livro();
+void listar_livros();
+void listar_livros_por_autor();
 
 #endif // MODULO_LIVRO_H
