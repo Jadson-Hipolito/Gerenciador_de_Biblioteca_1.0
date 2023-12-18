@@ -276,7 +276,6 @@ int menu_livro() {
     printf("3 - Alugar Livro\n");
     printf("4 - Devolver Livro\n");
     printf("5 - Listar livros\n");
-    printf("6 - Listar livros por autor\n");
     printf("0 - Retornar para o menu principal\n");
     printf("=====================================\n");
     printf("Escolha uma opção: ");
@@ -297,9 +296,6 @@ int menu_livro() {
       break;
     case 5:
       listar_livros();
-      break;
-    case 6:
-      listar_livros_por_autor();
       break;
     case 0:
       printf("Retornando para o menu principal.\n");
@@ -334,51 +330,6 @@ void listar_livros() {
     printf("Pressione Enter para sair...\n");
     while (getchar() != '\n');  // Limpa o buffer de entrada
     getchar(); // Aguarda Enter
-}
-
-void listar_livros_por_autor() {
-    FILE *arquivo;
-    arquivo = fopen("biblioteca.txt", "r"); // Abre o arquivo em modo de leitura
-
-    if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo.\n");
-        return;
-    }
-
-    char autor[150];
-    printf("\nDigite o nome do autor: ");
-    scanf(" %[^\n]", autor);
-
-    printf("\n === Lista de Livros do Autor %s ===\n", autor);
-
-    int encontrados = 0;
-    int tempNumLivros = 0;  // Variável temporária para controlar a leitura dos livros
-
-    while (tempNumLivros < MAX_LIVROS &&
-           fscanf(arquivo, "%s %s %d %d %s",
-                  biblioteca[tempNumLivros].titulo, biblioteca[tempNumLivros].autor,
-                  &biblioteca[tempNumLivros].quant, &biblioteca[tempNumLivros].local, biblioteca[tempNumLivros].isbn) == 5) {
-
-        if (strcmp(biblioteca[tempNumLivros].autor, autor) == 0) {
-            printf("Título: %s, Quantidade: %d, Local: %d, ISBN: %s\n",
-                   biblioteca[tempNumLivros].titulo, biblioteca[tempNumLivros].quant,
-                   biblioteca[tempNumLivros].local, biblioteca[tempNumLivros].isbn);
-            encontrados++;
-        }
-
-        tempNumLivros++;
-    }
-
-    fclose(arquivo);
-
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-    printf("Pressione Enter para sair...\n");
-    getchar();
-
-    if (encontrados == 0) {
-        printf("Nenhum livro encontrado para o autor %s.\n", autor);
-    }
 }
 
 void registrar_livro() {
