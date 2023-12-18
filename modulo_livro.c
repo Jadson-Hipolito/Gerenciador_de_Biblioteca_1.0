@@ -311,40 +311,22 @@ int menu_livro() {
   return 0;
 }
 
+
 void listar_livros() {
     FILE *arquivo;
     arquivo = fopen("biblioteca.txt", "r"); // Abre o arquivo em modo de leitura
 
     if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo.\n");
+        perror("Erro ao abrir o arquivo");
         return;
     }
 
     printf("\n === Lista de Livros ===\n");
 
-    struct livro tempLivro;
+    char linha[100];
 
-    while (fscanf(arquivo, "Nome do livro: %[^\n]\n", tempLivro.titulo) == 1) {
-        fscanf(arquivo, "Autor do livro: %[^\n]\n", tempLivro.autor);
-        fscanf(arquivo, "Quantidade de cópias do livro: %d\n", &tempLivro.quant);
-        // Ignore a linha adicional com "Quantidade de cópias do livro"
-        fscanf(arquivo, "Lista de CPFs: %*[^\n]\n");
-        fscanf(arquivo, "Número do local: %d\n", &tempLivro.local);
-        fscanf(arquivo, "ISBN: %[^\n]\n", tempLivro.isbn);
-
-        if (numLivros < MAX_LIVROS) {
-            // Se houver espaço na memória, copiamos o livro
-            strcpy(biblioteca[numLivros].titulo, tempLivro.titulo);
-            strcpy(biblioteca[numLivros].autor, tempLivro.autor);
-            biblioteca[numLivros].quant = tempLivro.quant;
-            biblioteca[numLivros].local = tempLivro.local;
-            strcpy(biblioteca[numLivros].isbn, tempLivro.isbn);
-
-            numLivros++;
-        } else {
-            printf("Limite de livros atingido.\n");
-            break;
-        }
+    while (fgets(linha, sizeof(linha), arquivo) != NULL) {
+        printf("%s", linha); // Exibe cada linha do arquivo
     }
 
     fclose(arquivo);
