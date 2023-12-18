@@ -312,21 +312,57 @@ int menu_livro() {
 }
 
 void listar_livros() {
+    FILE *arquivo;
+    arquivo = fopen("biblioteca.txt", "r"); // Abre o arquivo em modo de leitura
+
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
     printf("\n === Lista de Livros ===\n");
 
-    for (int i = 0; i < numLivros; i++) {
-        printf("Título: %s, Autor: %s, Quantidade: %d, Local: %d, ISBN: %s\n",
-               biblioteca[i].titulo, biblioteca[i].autor,
-               biblioteca[i].quant, biblioteca[i].local, biblioteca[i].isbn);
+    struct livro tempLivro;
+
+    while (fscanf(arquivo, "Nome do livro: %[^\n]\n", tempLivro.titulo) == 1) {
+        fscanf(arquivo, "Autor do livro: %[^\n]\n", tempLivro.autor);
+        fscanf(arquivo, "Quantidade de cópias do livro: %d\n", &tempLivro.quant);
+        // Ignore a linha adicional com "Quantidade de cópias do livro"
+        fscanf(arquivo, "Lista de CPFs: %*[^\n]\n");
+        fscanf(arquivo, "Número do local: %d\n", &tempLivro.local);
+        fscanf(arquivo, "ISBN: %[^\n]\n", tempLivro.isbn);
+
+        if (numLivros < MAX_LIVROS) {
+            // Se houver espaço na memória, copiamos o livro
+            strcpy(biblioteca[numLivros].titulo, tempLivro.titulo);
+            strcpy(biblioteca[numLivros].autor, tempLivro.autor);
+            biblioteca[numLivros].quant = tempLivro.quant;
+            biblioteca[numLivros].local = tempLivro.local;
+            strcpy(biblioteca[numLivros].isbn, tempLivro.isbn);
+
+            numLivros++;
+        } else {
+            printf("Limite de livros atingido.\n");
+            break;
+        }
     }
+
+    fclose(arquivo);
+
     printf("Pressione Enter para sair...\n");
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-    printf("Pressione Enter para sair...\n");
-    getchar();
+    while (getchar() != '\n');  // Limpa o buffer de entrada
+    getchar(); // Aguarda Enter
 }
 
 void listar_livros_por_autor() {
+    FILE *arquivo;
+    arquivo = fopen("biblioteca.txt", "r"); // Abre o arquivo em modo de leitura
+
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
     char autor[150];
     printf("\nDigite o nome do autor: ");
     scanf(" %[^\n]", autor);
@@ -334,15 +370,25 @@ void listar_livros_por_autor() {
     printf("\n === Lista de Livros do Autor %s ===\n", autor);
 
     int encontrados = 0;
+    int tempNumLivros = 0;  // Variável temporária para controlar a leitura dos livros
 
-    for (int i = 0; i < numLivros; i++) {
-        if (strcmp(biblioteca[i].autor, autor) == 0) {
+    while (tempNumLivros < MAX_LIVROS &&
+           fscanf(arquivo, "%s %s %d %d %s",
+                  biblioteca[tempNumLivros].titulo, biblioteca[tempNumLivros].autor,
+                  &biblioteca[tempNumLivros].quant, &biblioteca[tempNumLivros].local, biblioteca[tempNumLivros].isbn) == 5) {
+
+        if (strcmp(biblioteca[tempNumLivros].autor, autor) == 0) {
             printf("Título: %s, Quantidade: %d, Local: %d, ISBN: %s\n",
-                   biblioteca[i].titulo, biblioteca[i].quant,
-                   biblioteca[i].local, biblioteca[i].isbn);
+                   biblioteca[tempNumLivros].titulo, biblioteca[tempNumLivros].quant,
+                   biblioteca[tempNumLivros].local, biblioteca[tempNumLivros].isbn);
             encontrados++;
         }
+
+        tempNumLivros++;
     }
+
+    fclose(arquivo);
+
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
     printf("Pressione Enter para sair...\n");
@@ -378,6 +424,9 @@ void registrar_livro() {
         fprintf(file, "Quantidade de cópias do livro: %d\n", biblioteca[numLivros].quant);
 
         biblioteca[numLivros].quant_disp = biblioteca[numLivros].quant;
+        fprintf(file, "Quantidade de cópias do livro: %d\n", biblioteca[numLivros].quant_disp);
+
+        fprintf(file, "Lista de CPFs: %d\n", biblioteca[numLivros].quant_disp);
 
         printf("Número do local: ");
         scanf("%d", &biblioteca[numLivros].local);

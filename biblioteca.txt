@@ -1,5 +1,7 @@
-Nome do livro: Os torduosos caminhos da mente humana
+Nome do livro: Caminhos Torduosos da Mente Humana
 Autor do livro: Stephen Silva Russo
 Quantidade de cópias do livro: 12
-Número do local: 2168
+Quantidade de cópias do livro: 12
+Lista de CPFs: 12
+Número do local: 1256
 ISBN: 9780596007737
